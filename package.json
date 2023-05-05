@@ -1,0 +1,17 @@
+{
+  "name": "pecker",
+  "version": "0.0.1",
+  "description": "Collection of opinionated libraries to make NestJS life easier",
+  "main": "index.js",
+  "license": "GPL-2.0-only",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "blazmrak",
+  "devDependencies": {
+    "lerna": "^6.6.2"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}

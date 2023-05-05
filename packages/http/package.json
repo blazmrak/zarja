@@ -1,0 +1,19 @@
+{
+  "name": "@pecker/http",
+  "version": "0.0.1",
+  "description": "Http utilities for NestJS",
+  "author": "blazmrak",
+  "homepage": "",
+  "license": "GPL-2.0-only",
+  "main": "lib/http.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "node ./__tests__/http.test.js"
+  }
+}
