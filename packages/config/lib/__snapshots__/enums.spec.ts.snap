@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`enum fails if environment does not match the enum 1`] = `
+EnvironmentInitializationFailed {
+  "errors": [
+    {
+      "error": "Value of 'fail' (FAIL) should be one of [valid, ok]",
+    },
+  ],
+}
+`;
+
+exports[`enum parses with array definition 1`] = `
+{
+  "defaultEnum": "valid",
+  "enum": "valid",
+  "namedEnum": "valid",
+  "od": "ok",
+  "optionalEnum": undefined,
+}
+`;
+
+exports[`enum parses with enum definition 1`] = `
+{
+  "defaultEnum": "valid",
+  "enum": "valid",
+  "namedEnum": "valid",
+  "od": "ok",
+  "optionalEnum": undefined,
+}
+`;

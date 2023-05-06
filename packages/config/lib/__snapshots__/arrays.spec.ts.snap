@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`array of numbers parses basic options 1`] = `
+{
+  "arr": [
+    5,
+    6,
+  ],
+  "defaultArr": [
+    1,
+    2,
+  ],
+  "overrides": [
+    5,
+    6,
+  ],
+}
+`;
+
+exports[`array of strings parses basic options 1`] = `
+{
+  "arr": [
+    "str1",
+    "whitespace_around",
+    "3",
+  ],
+  "defaultArr": [
+    "d1",
+    "d2",
+  ],
+}
+`;

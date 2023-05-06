@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`numbers Fails on invalid number 1`] = `
+EnvironmentInitializationFailed {
+  "errors": [
+    {
+      "error": "Value of 'num' (NUM) should be a number",
+    },
+  ],
+}
+`;
+
+exports[`numbers parses basic options 1`] = `
+{
+  "defaultNum": 3,
+  "namedNum": 2,
+  "num": 2,
+  "od": 1,
+  "optionalNum": undefined,
+}
+`;

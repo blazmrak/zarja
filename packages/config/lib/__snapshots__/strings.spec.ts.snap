@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`string parses basic options 1`] = `
+{
+  "defaultStr": "default",
+  "namedStr": "str",
+  "od": "overriden",
+  "optionalStr": undefined,
+  "str": "str",
+}
+`;

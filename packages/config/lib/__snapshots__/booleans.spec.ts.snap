@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`boolean parses basic options 1`] = `
+{
+  "bool": true,
+  "defaultBool": true,
+  "namedBool": true,
+  "od": false,
+  "optionalBool": undefined,
+}
+`;
