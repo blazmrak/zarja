@@ -24,7 +24,7 @@ describe('enum', () => {
     )
 
     expect(config).toMatchSnapshot()
-    expectTypeOf(config).toEqualTypeOf<{
+    expectTypeOf(config).toMatchTypeOf<{
       defaultEnum: Test
       od: Test
       optionalEnum: Test | undefined
@@ -48,7 +48,7 @@ describe('enum', () => {
     )
 
     expect(config).toMatchSnapshot()
-    expectTypeOf(config).toEqualTypeOf<{
+    expectTypeOf(config).toMatchTypeOf<{
       defaultEnum: 'valid' | 'ok'
       od: 'valid' | 'ok'
       optionalEnum: 'valid' | 'ok' | undefined

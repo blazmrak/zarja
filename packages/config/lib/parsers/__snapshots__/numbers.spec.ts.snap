@@ -13,6 +13,7 @@ EnvironmentInitializationFailed {
 exports[`numbers parses basic options 1`] = `
 {
   "defaultNum": 3,
+  "env": "local",
   "namedNum": 2,
   "num": 2,
   "od": 1,

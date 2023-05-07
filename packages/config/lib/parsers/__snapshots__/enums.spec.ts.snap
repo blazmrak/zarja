@@ -14,6 +14,7 @@ exports[`enum parses with array definition 1`] = `
 {
   "defaultEnum": "valid",
   "enum": "valid",
+  "env": "local",
   "namedEnum": "valid",
   "od": "ok",
   "optionalEnum": undefined,
@@ -24,6 +25,7 @@ exports[`enum parses with enum definition 1`] = `
 {
   "defaultEnum": "valid",
   "enum": "valid",
+  "env": "local",
   "namedEnum": "valid",
   "od": "ok",
   "optionalEnum": undefined,

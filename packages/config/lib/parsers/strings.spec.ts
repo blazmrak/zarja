@@ -18,7 +18,7 @@ describe('string', () => {
     )
 
     expect(config).toMatchSnapshot()
-    expectTypeOf(config).toEqualTypeOf<{
+    expectTypeOf(config).toMatchTypeOf<{
       defaultStr: string
       od: string
       optionalStr: string | undefined

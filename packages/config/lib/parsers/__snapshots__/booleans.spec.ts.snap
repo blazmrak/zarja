@@ -4,6 +4,7 @@ exports[`boolean parses basic options 1`] = `
 {
   "bool": true,
   "defaultBool": true,
+  "env": "local",
   "namedBool": true,
   "od": false,
   "optionalBool": undefined,

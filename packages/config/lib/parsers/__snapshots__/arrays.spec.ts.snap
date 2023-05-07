@@ -10,6 +10,7 @@ exports[`array of numbers parses basic options 1`] = `
     1,
     2,
   ],
+  "env": "local",
   "overrides": [
     5,
     6,
@@ -28,5 +29,6 @@ exports[`array of strings parses basic options 1`] = `
     "d1",
     "d2",
   ],
+  "env": "local",
 }
 `;

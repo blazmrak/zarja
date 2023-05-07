@@ -1,19 +1,26 @@
-import { BaseVarOpts, ParseError, Value } from './parsers'
+import { BaseVarOpts, ParseError, Value, Var } from './parsers'
 import { BaseVar } from './parsers/base'
 import * as dotenv from 'dotenv'
 import * as path from 'path'
+import * as fs from 'fs'
 export { Var } from './parsers'
 
 export type ConfigDefinition<V extends BaseVarOpts, T extends Value | Value[] | undefined> = {
   [key: string]: ConfigDefinition<V, T> | BaseVar<V, T>
 }
 
-export type Config<C extends ConfigDefinition<any, any>> = {
+export type ExtractConfig<C extends ConfigDefinition<any, any>> = {
   [key in keyof C]: C[key] extends BaseVar<any, any>
     ? C[key]['output']
     : C[key] extends ConfigDefinition<any, any>
-    ? Config<C[key]>
+    ? ExtractConfig<C[key]>
     : never
+}
+
+export type Config<C extends ConfigDefinition<any, any>> = ExtractConfig<C> & {
+  env: C['env'] extends BaseVar<any, any>
+    ? C['env']['output']
+    : 'local' | 'test' | 'staging' | 'production'
 }
 
 type InitOpts = {
@@ -23,10 +30,13 @@ type InitOpts = {
 }
 
 type ParsedResult = { [key: string]: Value | Value[] | undefined | ParsedResult }
-type ParsedNode = {
-  result?: ParsedResult
-  errors?: ParseError[]
-}
+type ParsedNode =
+  | {
+      result: ParsedResult
+    }
+  | {
+      errors: ParseError[]
+    }
 
 function parseEnvironment<T extends ConfigDefinition<BaseVarOpts, Value | Value[]>>(
   template: T,
@@ -37,9 +47,9 @@ function parseEnvironment<T extends ConfigDefinition<BaseVarOpts, Value | Value[
 
   const result = Object.entries(template).reduce((acc, [key, value]) => {
     const newPath = path ? path + '.' + key : key
-    const name = path ? path + '_' + key.toUpperCase() : key.toUpperCase()
+    const name = path ? (path + '_' + key).toUpperCase() : key.toUpperCase()
     if (value instanceof BaseVar) {
-      const res = value.parse(env, { path: newPath, name: name })
+      const res = value.parse(env, { path: newPath, name })
       if (typeof res === 'object' && !Array.isArray(res)) {
         errors.push(res)
       } else {
@@ -47,7 +57,7 @@ function parseEnvironment<T extends ConfigDefinition<BaseVarOpts, Value | Value[
       }
     } else {
       const res = parseEnvironment(value, env, newPath)
-      if (res.errors) {
+      if ('errors' in res) {
         errors.push(...res.errors)
       } else {
         acc[key] = res.result
@@ -73,13 +83,17 @@ export function initializeEnvironment<T extends ConfigDefinition<any, any>>(
 ): Config<T> {
   if (!env) {
     const filePath = path.resolve(path.join(directory, file))
-    dotenv.config({ path: filePath })
-    env = process.env
+    const content = fs.readFileSync(filePath)
+    env = dotenv.parse(content)
   }
 
-  const { result, errors } = parseEnvironment(template, env)
+  // @ts-expect-error
+  template.env ??= Var.enum(['local', 'test', 'staging', 'production'])
+    .name('NODE_ENV')
+    .default('local')
+  const res = parseEnvironment(template, env)
 
-  if (errors) throw new EnvironmentInitializationFailed(errors)
+  if ('errors' in res) throw new EnvironmentInitializationFailed(res.errors)
 
-  return result as any
+  return res.result as any
 }

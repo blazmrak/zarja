@@ -3,6 +3,7 @@
 exports[`string parses basic options 1`] = `
 {
   "defaultStr": "default",
+  "env": "local",
   "namedStr": "str",
   "od": "overriden",
   "optionalStr": undefined,

@@ -19,7 +19,7 @@ describe('numbers', () => {
     )
 
     expect(config).toMatchSnapshot()
-    expectTypeOf(config).toEqualTypeOf<{
+    expectTypeOf(config).toMatchTypeOf<{
       defaultNum: number
       od: number
       optionalNum: number | undefined

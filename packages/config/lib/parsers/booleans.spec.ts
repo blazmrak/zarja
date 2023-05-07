@@ -18,7 +18,7 @@ describe('boolean', () => {
     )
 
     expect(config).toMatchSnapshot()
-    expectTypeOf(config).toEqualTypeOf<{
+    expectTypeOf(config).toMatchTypeOf<{
       defaultBool: boolean
       od: boolean
       optionalBool: boolean | undefined

@@ -33,7 +33,7 @@ describe('array', () => {
       )
 
       expect(config).toMatchSnapshot()
-      expectTypeOf(config).toEqualTypeOf<{
+      expectTypeOf(config).toMatchTypeOf<{
         defaultArr: string[]
         arr: string[]
       }>()
@@ -54,7 +54,7 @@ describe('array', () => {
       )
 
       expect(config).toMatchSnapshot()
-      expectTypeOf(config).toEqualTypeOf<{
+      expectTypeOf(config).toMatchTypeOf<{
         defaultArr: number[]
         arr: number[]
         overrides: number[]

@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`real tests reports errors 1`] = `
+EnvironmentInitializationFailed {
+  "errors": [
+    {
+      "error": "Value of 'jwt.signingSecret' (JWT_SECRET) should be a string",
+    },
+    {
+      "error": "Value of 'db.url' (DB_URL) should be a string",
+    },
+  ],
+}
+`;
+
+exports[`real tests simple configuration 1`] = `
+{
+  "db": {
+    "logging": false,
+    "recreate": false,
+    "type": "postgres",
+    "url": "db.url",
+  },
+  "env": "local",
+  "jwt": {
+    "expiresIn": 300000,
+    "signingSecret": "secret",
+  },
+  "log": {
+    "content": [
+      "meta",
+      "user",
+    ],
+    "format": "raw",
+    "level": "info",
+  },
+  "port": 8080,
+  "security": {
+    "passwordRounds": 12,
+  },
+  "swagger": false,
+}
+`;
