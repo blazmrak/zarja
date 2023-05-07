@@ -50,7 +50,7 @@ export class Var {
     return new ArrayVar({ type: 'array', contains })
   }
 
-  static enum<T extends Enum | string>(output: T): EnumVar<T & Enum> {
+  static enum<T extends Enum | string>(output: T): EnumVar<T extends Enum ? T : never> {
     if (typeof output === 'string') {
       return new EnumVar({ type: 'enum', enum: [output] }).default(output) as any
     }
