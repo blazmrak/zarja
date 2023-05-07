@@ -2,7 +2,7 @@ import { initializeEnvironment } from '../index'
 import { expectTypeOf } from 'expect-type'
 import { Var } from './index'
 
-describe('boolean', () => {
+describe('boolean parser', () => {
   it('parses basic options', () => {
     const env = { BOOL: 'true', OD: 'false' }
 

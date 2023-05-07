@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`enum fails if environment does not match the enum 1`] = `
+exports[`enum parser fails if environment does not match the enum 1`] = `
 EnvironmentInitializationFailed {
   "errors": [
     {
@@ -10,7 +10,7 @@ EnvironmentInitializationFailed {
 }
 `;
 
-exports[`enum parses with array definition 1`] = `
+exports[`enum parser parses with array definition 1`] = `
 {
   "defaultEnum": "valid",
   "enum": "valid",
@@ -21,7 +21,7 @@ exports[`enum parses with array definition 1`] = `
 }
 `;
 
-exports[`enum parses with enum definition 1`] = `
+exports[`enum parser parses with enum definition 1`] = `
 {
   "defaultEnum": "valid",
   "enum": "valid",

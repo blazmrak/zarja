@@ -8,7 +8,7 @@ enum Test {
   OK = 'ok',
 }
 
-describe('enum', () => {
+describe('enum parser', () => {
   it('parses with enum definition', () => {
     const env = { ENUM: 'valid', OD: 'ok' }
 

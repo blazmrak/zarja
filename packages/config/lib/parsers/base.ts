@@ -3,7 +3,8 @@ import { BaseVarOpts, ParseError, ParseParams } from './index'
 type TransformParams = ParseParams & { env: string }
 
 export class TransformationContext {
-  info: TransformParams
+  constructor(public info: TransformParams) {}
+
   error(str: string): ParseError {
     return {
       error: str,
@@ -90,5 +91,15 @@ export abstract class BaseVar<In extends BaseVarOpts, Output> {
     }
 
     return this as any
+  }
+
+  runTransformations(value: In['type'], ctx: TransformationContext): Output | ParseError {
+    return this._transformers.reduce((res: In['type'] | ParseError, transformer) => {
+      if (typeof res === 'object' && 'errors' in res) {
+        return res
+      } else {
+        return transformer(res, ctx)
+      }
+    }, value as any)
   }
 }

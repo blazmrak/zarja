@@ -1,5 +1,5 @@
 import { BaseVarOpts, ParseError, Value, Var } from './parsers'
-import { BaseVar } from './parsers/base'
+import { BaseVar, TransformationContext } from './parsers/base'
 import * as dotenv from 'dotenv'
 import * as path from 'path'
 import * as fs from 'fs'
@@ -73,6 +73,45 @@ function parseEnvironment<T extends ConfigDefinition<BaseVarOpts, Value | Value[
   }
 }
 
+function runTransformations(
+  config: any,
+  template: ConfigDefinition<any, any>,
+  env: string,
+  path = '',
+): ParsedNode {
+  const errors: ParseError[] = []
+
+  const result = Object.entries(template).reduce((acc, [key, value]) => {
+    const newPath = path ? path + '.' + key : key
+    const name = path ? (path + '_' + key).toUpperCase() : key.toUpperCase()
+    if (value instanceof BaseVar) {
+      const res = value.runTransformations(
+        config[key],
+        new TransformationContext({ env, path: newPath, name }),
+      )
+      if (typeof res === 'object' && !Array.isArray(res)) {
+        errors.push(res)
+      } else {
+        acc[key] = res
+      }
+    } else {
+      const res = runTransformations(config[key], value, env, newPath)
+      if ('errors' in res) {
+        errors.push(...res.errors)
+      } else {
+        acc[key] = res.result
+      }
+    }
+    return acc
+  }, config)
+
+  if (errors.length > 0) {
+    return { errors }
+  } else {
+    return { result }
+  }
+}
+
 class EnvironmentInitializationFailed {
   constructor(public errors: ParseError[]) {}
 }
@@ -95,5 +134,9 @@ export function initializeEnvironment<T extends ConfigDefinition<any, any>>(
 
   if ('errors' in res) throw new EnvironmentInitializationFailed(res.errors)
 
-  return res.result as any
+  const result = runTransformations(res.result, template, (res.result as any).env)
+
+  if ('errors' in result) throw new EnvironmentInitializationFailed(result.errors)
+
+  return result.result as any
 }

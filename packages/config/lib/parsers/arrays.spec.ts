@@ -2,7 +2,7 @@ import { initializeEnvironment } from '../index'
 import { expectTypeOf } from 'expect-type'
 import { Var } from './index'
 
-describe('array', () => {
+describe('array parser', () => {
   describe('type', () => {
     it('expect error if type of result is not string array for array that should contain strings', () => {
       const env = { ARR: '1' }

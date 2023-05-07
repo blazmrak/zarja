@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`numbers Fails on invalid number 1`] = `
+exports[`number parser Fails on invalid number 1`] = `
 EnvironmentInitializationFailed {
   "errors": [
     {
@@ -10,7 +10,7 @@ EnvironmentInitializationFailed {
 }
 `;
 
-exports[`numbers parses basic options 1`] = `
+exports[`number parser parses basic options 1`] = `
 {
   "defaultNum": 3,
   "env": "local",

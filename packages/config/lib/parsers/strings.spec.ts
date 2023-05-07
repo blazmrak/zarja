@@ -2,7 +2,7 @@ import { initializeEnvironment } from '../index'
 import { expectTypeOf } from 'expect-type'
 import { Var } from './index'
 
-describe('string', () => {
+describe('string parser', () => {
   it('parses basic options', () => {
     const env = { STR: 'str', OD: 'overriden' }
 

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`string parses basic options 1`] = `
+exports[`string parser parses basic options 1`] = `
 {
   "defaultStr": "default",
   "env": "local",

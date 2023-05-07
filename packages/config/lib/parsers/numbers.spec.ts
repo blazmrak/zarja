@@ -3,7 +3,7 @@ import { expectTypeOf } from 'expect-type'
 import { extractError } from '../../tests/helpers/assertions'
 import { Var } from './index'
 
-describe('numbers', () => {
+describe('number parser', () => {
   it('parses basic options', () => {
     const env = { NUM: '2', OD: '1' }
 

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`array of numbers parses basic options 1`] = `
+exports[`array parser of numbers parses basic options 1`] = `
 {
   "arr": [
     5,
@@ -18,7 +18,7 @@ exports[`array of numbers parses basic options 1`] = `
 }
 `;
 
-exports[`array of strings parses basic options 1`] = `
+exports[`array parser of strings parses basic options 1`] = `
 {
   "arr": [
     "str1",
