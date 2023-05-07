@@ -12,13 +12,13 @@ export interface Pagination<T> {
 export class PaginationParams {
   @IsOptional()
   @Min(1)
-    // @Default(1)
+  // @Default(1)
   @Public()
   page?: number
 
   @IsOptional()
   @Max(100)
-    // @Default(10)
+  // @Default(10)
   @Public()
   length?: number
 }

@@ -116,8 +116,8 @@ export class ClassSerializerInterceptor implements NestInterceptor {
     }
 
     return Array.isArray(response)
-           ? response.map(item => this.transformToPlain(item, options))
-           : this.transformToPlain(response, options)
+      ? response.map(item => this.transformToPlain(item, options))
+      : this.transformToPlain(response, options)
   }
 
   transformToPlain(plainOrClass: any, options: SerializationOpts): PlainLiteralObject {
