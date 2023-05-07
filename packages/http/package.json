@@ -17,12 +17,19 @@
     "test": "jest"
   },
   "dependencies": {
-    "@nestjs/common": "^9.4.0",
-    "@nestjs/swagger": "^6.3.0",
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.0"
+    "helmet": "^7.0.0",
+    "jsonwebtoken": "^9.0.0"
+  },
+  "peerDependencies": {
+    "@nestjs/jwt": ">=10.0.3",
+    "@nestjs/common": ">=9.0.0",
+    "@nestjs/core": ">=9.0.0",
+    "@nestjs/swagger": ">=6.0.0",
+    "class-transformer": ">=0.5.1",
+    "class-validator": ">=0.14.0"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.2",
     "jest": "^29.5.0"
   }
 }
