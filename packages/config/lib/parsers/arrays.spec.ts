@@ -1,5 +1,6 @@
-import { initializeEnvironment, Var } from './index'
+import { initializeEnvironment } from '../index'
 import { expectTypeOf } from 'expect-type'
+import { Var } from './index'
 
 describe('array', () => {
   describe('type', () => {

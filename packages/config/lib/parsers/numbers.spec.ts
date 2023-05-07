@@ -1,6 +1,7 @@
-import { initializeEnvironment, Var } from './index'
+import { initializeEnvironment } from '../index'
 import { expectTypeOf } from 'expect-type'
-import { extractError } from '../tests/helpers/assertions'
+import { extractError } from '../../tests/helpers/assertions'
+import { Var } from './index'
 
 describe('numbers', () => {
   it('parses basic options', () => {
