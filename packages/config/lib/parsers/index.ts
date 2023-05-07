@@ -22,15 +22,27 @@ export type BaseVarOpts = {
 }
 
 export class Var {
-  static string() {
+  static string(def?: string) {
+    if (def) {
+      return new StringVar().default(def)
+    }
+
     return new StringVar()
   }
 
-  static number() {
+  static number(def?: number) {
+    if (def) {
+      return new NumberVar().default(def)
+    }
+
     return new NumberVar()
   }
 
-  static boolean() {
+  static boolean(def?: boolean) {
+    if (def) {
+      return new BooleanVar().default(def)
+    }
+
     return new BooleanVar()
   }
 
@@ -38,7 +50,11 @@ export class Var {
     return new ArrayVar({ type: 'array', contains })
   }
 
-  static enum<T extends Enum>(output: T): EnumVar<T> {
-    return new EnumVar({ type: 'enum', enum: output })
+  static enum<T extends Enum | string>(output: T): EnumVar<T & Enum> {
+    if (typeof output === 'string') {
+      return new EnumVar({ type: 'enum', enum: [output] }).default(output) as any
+    }
+
+    return new EnumVar({ type: 'enum', enum: output }) as any
   }
 }
