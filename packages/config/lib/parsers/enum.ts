@@ -5,7 +5,7 @@ type EnumVarOpts<T> = {
   type: 'enum'
   enum: T
 }
-type EnumOutput<T> = T extends {
+export type EnumOutput<T> = T extends {
   [key: string]: string
 }
   ? T[keyof T]
@@ -13,10 +13,9 @@ type EnumOutput<T> = T extends {
   ? T[number]
   : never
 
-export class EnumVar<T extends { [key: string]: string } | readonly string[]> extends BaseVar<
-  EnumVarOpts<T>,
-  EnumOutput<T>
-> {
+export type Enum = { [key: string]: string } | readonly string[]
+
+export class EnumVar<T extends Enum> extends BaseVar<EnumVarOpts<T>, EnumOutput<T>> {
   _parse(value: string, params: ParseParams) {
     let valid: string[] = []
     if (Array.isArray(this._opts.enum)) {

@@ -61,4 +61,33 @@ describe('array parser', () => {
       }>()
     })
   })
+
+  describe('of enums', () => {
+    enum Test {
+      TEST = 'test',
+      IS = 'is',
+    }
+
+    it('parses basic options', () => {
+      const env = { ARR: 'test,is' }
+
+      const config = initializeEnvironment(
+        {
+          defaultArr: Var.array(['test', 'is'] as const).default(['test']),
+          arr: Var.array(['test', 'is'] as const),
+          arrEnum: Var.array(Test).name('ARR'),
+          overrides: Var.array(Test).default([Test.IS]).name('ARR'),
+        },
+        { env },
+      )
+
+      expect(config).toMatchSnapshot()
+      expectTypeOf(config).toMatchTypeOf<{
+        defaultArr: ('test' | 'is')[]
+        arr: ('test' | 'is')[]
+        arrEnum: Test[]
+        overrides: Test[]
+      }>()
+    })
+  })
 })

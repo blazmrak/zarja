@@ -23,7 +23,7 @@ describe('real tests', function () {
         log: {
           level: Var.enum(LogLevel).default(LogLevel.INFO),
           format: Var.enum(['raw', 'pretty'] as const).default('raw'),
-          content: Var.array('string')
+          content: Var.array(['meta', 'user', 'body'])
             .default(['meta', 'user'])
             .transform(['staging'], arg => arg.filter(i => i !== 'body')),
         },
@@ -85,7 +85,7 @@ describe('real tests', function () {
           log: {
             level: Var.enum(LogLevel).default(LogLevel.INFO),
             format: Var.enum(['raw', 'pretty'] as const).default('raw'),
-            content: Var.array('string')
+            content: Var.array(['meta', 'user', 'body'])
               .default(['meta', 'user'])
               .transform(['staging'], arg => arg.filter(i => i !== 'body')),
           },

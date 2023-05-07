@@ -27,6 +27,7 @@ type InitOpts = {
   env?: Record<string, string | undefined>
   file?: string
   directory?: string
+  fromFile?: boolean
 }
 
 type ParsedResult = { [key: string]: Value | Value[] | undefined | ParsedResult }
@@ -118,8 +119,12 @@ class EnvironmentInitializationFailed {
 
 export function initializeEnvironment<T extends ConfigDefinition<any, any>>(
   template: T,
-  { env, file = '.env.local', directory = './' }: InitOpts = {},
+  { env, file = '.env.local', directory = './', fromFile = true }: InitOpts = {},
 ): Config<T> {
+  if (!env && !fromFile) {
+    env = process.env
+  }
+
   if (!env) {
     const filePath = path.resolve(path.join(directory, file))
     const content = fs.readFileSync(filePath)

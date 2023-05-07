@@ -1,5 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`array parser of enums parses basic options 1`] = `
+{
+  "arr": [
+    "test",
+    "is",
+  ],
+  "arrEnum": [
+    "test",
+    "is",
+  ],
+  "defaultArr": [
+    "test",
+  ],
+  "env": "local",
+  "overrides": [
+    "test",
+    "is",
+  ],
+}
+`;
+
 exports[`array parser of numbers parses basic options 1`] = `
 {
   "arr": [

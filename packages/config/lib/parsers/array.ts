@@ -1,15 +1,16 @@
 import { NumberVar } from './number'
 import { StringVar } from './string'
 import { BooleanVar } from './boolean'
-import { BaseVarOpts, ExtractValue, ParseParams, ValueStr } from './index'
+import { BaseVarOpts, ExtractValue, ParseParams, ValueType } from './index'
 import { BaseVar } from './base'
+import { EnumVar } from './enum'
 
-type ArrayVarOpts<T extends ValueStr> = {
+type ArrayVarOpts<T extends ValueType> = {
   type: 'array'
   contains: T
 }
 export class ArrayVar<
-  Contains extends ValueStr,
+  Contains extends ValueType,
   Input extends ArrayVarOpts<Contains>,
 > extends BaseVar<Input, ExtractValue<Input['contains']>[]> {
   private readonly _parser: BaseVar<BaseVarOpts, any>
@@ -25,6 +26,9 @@ export class ArrayVar<
         break
       case 'boolean':
         this._parser = new BooleanVar()
+        break
+      default:
+        this._parser = new EnumVar({ type: 'enum', enum: params.contains })
         break
     }
   }

@@ -2,14 +2,16 @@ import { StringVar } from './string'
 import { NumberVar } from './number'
 import { BooleanVar } from './boolean'
 import { ArrayVar } from './array'
-import { EnumVar } from './enum'
+import { Enum, EnumOutput, EnumVar } from './enum'
 
 export type Value = string | number | boolean
-export type ValueStr = 'string' | 'number' | 'boolean'
-export type ExtractValue<T extends ValueStr> = T extends 'string'
+export type ValueType = 'string' | 'number' | 'boolean' | Enum
+export type ExtractValue<T extends ValueType> = T extends 'string'
   ? string
   : T extends 'number'
   ? number
+  : T extends Enum
+  ? EnumOutput<T>
   : boolean
 
 export type ParseError = { error: string }
@@ -32,11 +34,11 @@ export class Var {
     return new BooleanVar()
   }
 
-  static array<T extends ValueStr>(contains: T) {
+  static array<T extends ValueType>(contains: T) {
     return new ArrayVar({ type: 'array', contains })
   }
 
-  static enum<T extends { [key: string]: string } | readonly string[]>(output: T): EnumVar<T> {
+  static enum<T extends Enum>(output: T): EnumVar<T> {
     return new EnumVar({ type: 'enum', enum: output })
   }
 }
