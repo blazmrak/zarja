@@ -1,5 +1,123 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`real tests extracts all environment variables 1`] = `
+[
+  {
+    "default": 8080,
+    "name": "PORT",
+    "path": "port",
+    "required": false,
+    "type": "number",
+  },
+  {
+    "default": undefined,
+    "name": "JWT_SECRET",
+    "path": "jwt.signingSecret",
+    "required": true,
+    "type": "string",
+  },
+  {
+    "default": 300000,
+    "name": "JWT_EXPIRES_IN",
+    "path": "jwt.expiresIn",
+    "required": false,
+    "type": "number",
+  },
+  {
+    "default": "info",
+    "name": "LOG_LEVEL",
+    "path": "log.level",
+    "required": false,
+    "type": "enum",
+  },
+  {
+    "default": "raw",
+    "name": "LOG_FORMAT",
+    "path": "log.format",
+    "required": false,
+    "type": "enum",
+  },
+  {
+    "default": [
+      "meta",
+      "user",
+    ],
+    "name": "LOG_CONTENT",
+    "path": "log.content",
+    "required": false,
+    "type": "array",
+  },
+  {
+    "default": 12,
+    "name": "PASSWORD_ROUNDS",
+    "path": "security.passwordRounds",
+    "required": false,
+    "type": "number",
+  },
+  {
+    "default": undefined,
+    "name": "DB_URL",
+    "path": "db.url",
+    "required": true,
+    "type": "string",
+  },
+  {
+    "default": "postgres",
+    "name": "DB_TYPE",
+    "path": "db.type",
+    "required": false,
+    "type": "enum",
+  },
+  {
+    "default": false,
+    "name": "DB_LOGGING",
+    "path": "db.logging",
+    "required": false,
+    "type": "boolean",
+  },
+  {
+    "default": false,
+    "name": "DB_RECREATE",
+    "path": "db.recreate",
+    "required": false,
+    "type": "boolean",
+  },
+  {
+    "default": false,
+    "name": "SWAGGER",
+    "path": "swagger",
+    "required": false,
+    "type": "boolean",
+  },
+  {
+    "default": "local",
+    "name": "NODE_ENV",
+    "path": "env",
+    "required": false,
+    "type": "enum",
+  },
+]
+`;
+
+exports[`real tests extracts all environment variables 2`] = `
+[
+  {
+    "default": undefined,
+    "name": "JWT_SECRET",
+    "path": "jwt.signingSecret",
+    "required": true,
+    "type": "string",
+  },
+  {
+    "default": undefined,
+    "name": "DB_URL",
+    "path": "db.url",
+    "required": true,
+    "type": "string",
+  },
+]
+`;
+
 exports[`real tests reports errors 1`] = `
 EnvironmentInitializationFailed {
   "errors": [

@@ -1,4 +1,4 @@
-import { initializeEnvironment, Var } from '../lib'
+import { getVariables, initializeEnvironment, Var } from '../lib'
 import { expectTypeOf } from 'expect-type'
 import { extractError } from './helpers/assertions'
 
@@ -8,40 +8,39 @@ enum LogLevel {
 }
 
 describe('real tests', function () {
+  let configSchema = {
+    port: Var.number().default(8080),
+    jwt: {
+      signingSecret: Var.string().name('JWT_SECRET'),
+      expiresIn: Var.number()
+        .name('JWT_EXPIRES_IN')
+        .default(1000 * 60 * 5),
+    },
+    log: {
+      level: Var.enum(LogLevel).default(LogLevel.INFO),
+      format: Var.enum(['raw', 'pretty'] as const).default('raw'),
+      content: Var.array(['meta', 'user', 'body'])
+        .default(['meta', 'user'])
+        .transform(['staging'], arg => arg.filter(i => i !== 'body')),
+    },
+    security: {
+      passwordRounds: Var.number().name('PASSWORD_ROUNDS').default(12),
+    },
+    db: {
+      url: Var.string(),
+      type: Var.enum(['postgres'] as const).default('postgres'),
+      logging: Var.boolean()
+        .default(false)
+        .transform(['staging', 'production'], () => false),
+      recreate: Var.boolean().default(false),
+    },
+    swagger: Var.boolean().default(false),
+  }
+
   it('simple configuration', () => {
     const env = { JWT_SECRET: 'secret', DB_URL: 'db.url' }
 
-    const configuration = initializeEnvironment(
-      {
-        port: Var.number().default(8080),
-        jwt: {
-          signingSecret: Var.string().name('JWT_SECRET'),
-          expiresIn: Var.number()
-            .name('JWT_EXPIRES_IN')
-            .default(1000 * 60 * 5),
-        },
-        log: {
-          level: Var.enum(LogLevel).default(LogLevel.INFO),
-          format: Var.enum(['raw', 'pretty'] as const).default('raw'),
-          content: Var.array(['meta', 'user', 'body'])
-            .default(['meta', 'user'])
-            .transform(['staging'], arg => arg.filter(i => i !== 'body')),
-        },
-        security: {
-          passwordRounds: Var.number().name('PASSWORD_ROUNDS').default(12),
-        },
-        db: {
-          url: Var.string(),
-          type: Var.enum(['postgres'] as const).default('postgres'),
-          logging: Var.boolean()
-            .default(false)
-            .transform(['staging', 'production'], () => false),
-          recreate: Var.boolean().default(false),
-        },
-        swagger: Var.boolean().default(false),
-      },
-      { env },
-    )
+    const configuration = initializeEnvironment(configSchema, { env })
 
     expect(configuration).toMatchSnapshot()
     expectTypeOf(configuration).toEqualTypeOf<{
@@ -72,40 +71,15 @@ describe('real tests', function () {
   it('reports errors', () => {
     const env = {}
 
-    const configuration = extractError(() =>
-      initializeEnvironment(
-        {
-          port: Var.number().default(8080),
-          jwt: {
-            signingSecret: Var.string().name('JWT_SECRET'),
-            expiresIn: Var.number()
-              .name('JWT_EXPIRES_IN')
-              .default(1000 * 60 * 5),
-          },
-          log: {
-            level: Var.enum(LogLevel).default(LogLevel.INFO),
-            format: Var.enum(['raw', 'pretty'] as const).default('raw'),
-            content: Var.array(['meta', 'user', 'body'])
-              .default(['meta', 'user'])
-              .transform(['staging'], arg => arg.filter(i => i !== 'body')),
-          },
-          security: {
-            passwordRounds: Var.number().name('PASSWORD_ROUNDS').default(12),
-          },
-          db: {
-            url: Var.string(),
-            type: Var.enum(['postgres'] as const).default('postgres'),
-            logging: Var.boolean()
-              .default(false)
-              .transform(['staging', 'production'], () => false),
-            recreate: Var.boolean().default(false),
-          },
-          swagger: Var.boolean().default(false),
-        },
-        { env },
-      ),
-    )
+    const configuration = extractError(() => initializeEnvironment(configSchema, { env }))
 
     expect(configuration).toMatchSnapshot()
+  })
+
+  it('extracts all environment variables', () => {
+    const variables = getVariables(configSchema)
+
+    expect(variables).toMatchSnapshot()
+    expect(variables.filter(v => v.required)).toMatchSnapshot()
   })
 })

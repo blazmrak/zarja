@@ -40,6 +40,10 @@ export abstract class BaseVar<In extends BaseVarOpts, Output> {
     return this
   }
 
+  getName(name: string): string {
+    return this._name ?? name
+  }
+
   protected abstract _parse(value: string, params: ParseParams): Output | ParseError
 
   parse(environment: Record<string, unknown>, params: ParseParams): Output | ParseError {

@@ -5,14 +5,19 @@ import * as path from 'path'
 import * as fs from 'fs'
 export { Var } from './parsers'
 
-export type ConfigDefinition<V extends BaseVarOpts, T extends Value | Value[] | undefined> = {
-  [key: string]: ConfigDefinition<V, T> | BaseVar<V, T>
+export type ConfigDefinitionRec<V extends BaseVarOpts, T extends Value | Value[] | undefined> = {
+  [key: string]: ConfigDefinitionRec<V, T> | BaseVar<V, T>
 }
+
+export type ConfigDefinition<
+  V extends BaseVarOpts,
+  T extends Value | Value[] | undefined,
+> = ConfigDefinitionRec<V, T> & { env?: BaseVar<V, T> }
 
 export type ExtractConfig<C extends ConfigDefinition<any, any>> = {
   [key in keyof C]: C[key] extends BaseVar<any, any>
     ? C[key]['output']
-    : C[key] extends ConfigDefinition<any, any>
+    : C[key] extends ConfigDefinitionRec<any, any>
     ? ExtractConfig<C[key]>
     : never
 }
@@ -39,7 +44,7 @@ type ParsedNode =
       errors: ParseError[]
     }
 
-function parseEnvironment<T extends ConfigDefinition<BaseVarOpts, Value | Value[]>>(
+function parseEnvironment<T extends ConfigDefinitionRec<BaseVarOpts, Value | Value[]>>(
   template: T,
   env: Record<string, string | undefined>,
   path = '',
@@ -76,7 +81,7 @@ function parseEnvironment<T extends ConfigDefinition<BaseVarOpts, Value | Value[
 
 function runTransformations(
   config: any,
-  template: ConfigDefinition<any, any>,
+  template: ConfigDefinitionRec<any, any>,
   env: string,
   path = '',
 ): ParsedNode {
@@ -113,8 +118,62 @@ function runTransformations(
   }
 }
 
+type Variable = { name: string; path: string; type: string; required: boolean; default: any }
+
+function extractVariables(
+  template: ConfigDefinitionRec<any, any>,
+  env: string,
+  path = '',
+): Variable[] {
+  return Object.entries(template).reduce((acc, [key, value]) => {
+    const newPath = path ? path + '.' + key : key
+    const name = path ? (path + '_' + key).toUpperCase() : key.toUpperCase()
+    if (value instanceof BaseVar) {
+      const actualName = value.getName(name)
+      let required = !value['_optional'] && value['_default'] === undefined
+      let def = required
+        ? undefined
+        : value.runTransformations(
+            value['_default'],
+            new TransformationContext({ env, path: newPath, name: name }),
+          )
+      acc.push({
+        name: actualName,
+        path: newPath,
+        type: value['_opts']['type'],
+        required,
+        default: def,
+      })
+    } else {
+      const res = extractVariables(value, env, newPath)
+      acc.push(...res)
+    }
+    return acc
+  }, [] as Variable[])
+}
+
 class EnvironmentInitializationFailed {
   constructor(public errors: ParseError[]) {}
+}
+
+export function getVariables<T extends ConfigDefinition<any, any>>(
+  template: T,
+  environment?: string,
+): Variable[] {
+  if (environment) {
+    template.env = Var.enum(environment).name(template.env?.getName('ENV') ?? 'NODE_ENV')
+  }
+
+  template.env ??= Var.enum(['local', 'test', 'staging', 'production'])
+    .name('NODE_ENV')
+    .default('local')
+  let env = template.env['_default']
+  env = template.env.runTransformations(
+    env,
+    new TransformationContext({ env, path: 'env', name: template.env.getName('ENV') }),
+  )
+
+  return extractVariables(template, env)
 }
 
 export function initializeEnvironment<T extends ConfigDefinition<any, any>>(
@@ -131,7 +190,6 @@ export function initializeEnvironment<T extends ConfigDefinition<any, any>>(
     env = dotenv.parse(content)
   }
 
-  // @ts-expect-error
   template.env ??= Var.enum(['local', 'test', 'staging', 'production'])
     .name('NODE_ENV')
     .default('local')
