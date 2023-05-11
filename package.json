@@ -1,9 +1,13 @@
 {
   "name": "pecker",
   "version": "0.0.1",
-  "description": "Collection of opinionated libraries to make NestJS life easier",
+  "description": "A set of opinionated libraries and plugins for NestJS.",
   "main": "index.js",
-  "license": "GPL-2.0-only",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blazmrak/pecker"
+  },
+  "license": "MIT",
   "author": "blazmrak",
   "devDependencies": {
     "@nx/jest": "16.1.1",
