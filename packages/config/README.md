@@ -6,7 +6,7 @@ variables, similar to Microprofile.
 ## Usage
 
 ```typescript
-import { Var, initializeEnvironment } from '@pecker/config'
+import { Var, initializeEnvironment } from '@zarja/config'
 import { LogLevel } from './logger'
 
 export const config = initializeEnvironment({

@@ -1,5 +1,5 @@
 {
-  "name": "@pecker/http",
+  "name": "@zarja/http",
   "version": "0.0.1",
   "description": "Http utilities for NestJS",
   "author": "blazmrak",

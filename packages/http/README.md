@@ -5,7 +5,7 @@
 ## Usage
 
 ```
-const http = require('@pecker/http');
+const http = require('@zarja/http');
 
 // TODO: DEMONSTRATE API
 ```

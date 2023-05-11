@@ -1,10 +1,10 @@
 {
-  "name": "@pecker/config",
+  "name": "@zarja/config",
   "version": "0.0.1",
   "description": "Config utility",
   "author": "blazmrak",
   "homepage": "",
-  "license": "GPL-2.0-only",
+  "license": "MIT",
   "main": "lib/config.js",
   "directories": {
     "lib": "lib",

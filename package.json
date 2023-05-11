@@ -1,11 +1,11 @@
 {
-  "name": "pecker",
+  "name": "zarja",
   "version": "0.0.1",
   "description": "A set of opinionated libraries and plugins for NestJS.",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/blazmrak/pecker"
+    "url": "https://github.com/blazmrak/zarja"
   },
   "license": "MIT",
   "author": "blazmrak",

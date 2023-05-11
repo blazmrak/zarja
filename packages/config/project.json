@@ -1,5 +1,5 @@
 {
-  "name": "@pecker/config",
+  "name": "@zarja/config",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/config/src",
   "projectType": "library",

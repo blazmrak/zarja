@@ -33,7 +33,7 @@ type PackerHttpOpts = {
   }
 }
 
-export class PeckerHttp {
+export class ZarjaHttp {
   static setup(app: INestApplication, opts: PackerHttpOpts) {
     app.use(helmet(opts.helmet))
 

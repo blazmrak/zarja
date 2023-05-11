@@ -1,5 +1,5 @@
 {
-  "name": "@pecker/http",
+  "name": "@zarja/http",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/http/src",
   "projectType": "library",
