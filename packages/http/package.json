@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "Http utilities for NestJS",
   "author": "blazmrak",
-  "homepage": "",
-  "license": "GPL-2.0-only",
+  "license": "MIT",
+  "private": true,
   "main": "lib/http.js",
   "directories": {
     "lib": "lib",

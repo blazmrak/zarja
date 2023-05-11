@@ -18,11 +18,5 @@
     "strictBindCallApply": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "paths": {
-      "config": ["packages/config/src/**/*.ts"],
-      "http": ["packages/http/src/**/*.ts"]
-    }
   },
-  "include": ["packages/**/*.ts"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
 }
