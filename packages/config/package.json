@@ -1,6 +1,6 @@
 {
   "name": "@zarja/config",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "description": "Config utility",
   "author": "blazmrak",
   "homepage": "",
@@ -17,6 +17,9 @@
     "build": "tsc",
     "test": "jest"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "@types/jest": "^29.5.1",
     "@typescript-eslint/eslint-plugin": "^5.59.2",
@@ -32,5 +35,6 @@
   },
   "dependencies": {
     "dotenv": "^16.0.3"
-  }
+  },
+  "gitHead": "bc656b7f3e5e6e3ba561af95448f8bbdf91d1b76"
 }
