@@ -190,18 +190,32 @@ export function renderEnvFileContent(variables: Variable[]) {
     .join('\n')
 }
 
+function readFile(directory: string, file: string) {
+  const filePath = path.resolve(path.join(directory, file))
+  let content
+  try {
+    content = fs.readFileSync(filePath)
+  } catch {
+    console.warn(`error reading .env file at ${filePath}, defaulting to process.env`)
+    return process.env
+  }
+
+  try {
+    return dotenv.parse(content)
+  } catch {
+    console.warn(`failed to parse '${file}', defaulting to process.env`)
+    return process.env
+  }
+}
+
 export function initializeEnvironment<T extends ConfigDefinition<any, any>>(
   template: T,
   { env, file = '.env.local', directory = './', fromFile = true }: InitOpts = {},
 ): Config<T> {
   if (!env && !fromFile) {
     env = process.env
-  }
-
-  if (!env) {
-    const filePath = path.resolve(path.join(directory, file))
-    const content = fs.readFileSync(filePath)
-    env = dotenv.parse(content)
+  } else if (!env) {
+    env = readFile(directory, file)
   }
 
   template.env ??= Var.enum(['local', 'test', 'staging', 'production'])
