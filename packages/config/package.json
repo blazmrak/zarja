@@ -1,6 +1,6 @@
 {
   "name": "@zarja/config",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.3",
   "description": "Config utility",
   "author": "blazmrak",
   "homepage": "",
@@ -8,10 +8,12 @@
   "main": "lib/config.js",
   "directories": {
     "lib": "lib",
-    "test": "__tests__"
+    "test": "tests"
   },
   "files": [
-    "dist"
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "dist/**/*.json"
   ],
   "scripts": {
     "build": "tsc",
