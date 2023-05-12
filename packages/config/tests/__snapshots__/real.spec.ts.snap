@@ -118,6 +118,22 @@ exports[`real tests extracts all environment variables 2`] = `
 ]
 `;
 
+exports[`real tests renders env file 1`] = `
+"#PORT=8080
+JWT_SECRET=
+#JWT_EXPIRES_IN=300000
+#LOG_LEVEL=info
+#LOG_FORMAT=raw
+#LOG_CONTENT=meta,user
+#PASSWORD_ROUNDS=12
+DB_URL=
+#DB_TYPE=postgres
+#DB_LOGGING=false
+#DB_RECREATE=false
+#SWAGGER=false
+#NODE_ENV=local"
+`;
+
 exports[`real tests reports errors 1`] = `
 EnvironmentInitializationFailed {
   "errors": [

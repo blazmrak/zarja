@@ -176,6 +176,20 @@ export function getVariables<T extends ConfigDefinition<any, any>>(
   return extractVariables(template, env)
 }
 
+export function renderEnvFileContent(variables: Variable[]) {
+  return variables
+    .map(v => {
+      if (!v.required && v.default == null) {
+        return `#${v.name}=`
+      } else if (v.default != null) {
+        return `#${v.name}=${v.default}`
+      } else {
+        return `${v.name}=`
+      }
+    })
+    .join('\n')
+}
+
 export function initializeEnvironment<T extends ConfigDefinition<any, any>>(
   template: T,
   { env, file = '.env.local', directory = './', fromFile = true }: InitOpts = {},

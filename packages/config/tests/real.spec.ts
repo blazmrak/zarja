@@ -1,4 +1,4 @@
-import { getVariables, initializeEnvironment, Var } from '../lib'
+import { getVariables, initializeEnvironment, renderEnvFileContent, Var } from '../lib'
 import { expectTypeOf } from 'expect-type'
 import { extractError } from './helpers/assertions'
 
@@ -81,5 +81,13 @@ describe('real tests', function () {
 
     expect(variables).toMatchSnapshot()
     expect(variables.filter(v => v.required)).toMatchSnapshot()
+  })
+
+  it('renders env file', () => {
+    const variables = getVariables(configSchema)
+
+    const fileContent = renderEnvFileContent(variables)
+
+    expect(fileContent).toMatchSnapshot()
   })
 })
