@@ -1,6 +1,6 @@
 {
   "name": "@zarja/config",
-  "version": "0.1.0-alpha.4",
+  "version": "0.1.0-alpha.5",
   "description": "Config utility",
   "author": "blazmrak",
   "homepage": "",
@@ -38,5 +38,5 @@
   "dependencies": {
     "dotenv": "^16.0.3"
   },
-  "gitHead": "bc656b7f3e5e6e3ba561af95448f8bbdf91d1b76"
+  "gitHead": "2489d04684a55485cf3bce586c63f3e810357d4d"
 }
