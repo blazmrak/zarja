@@ -9,7 +9,7 @@ export class StringVar extends BaseVar<StringVarOpts, string> {
     super({ type: 'string' })
   }
 
-  _parse(value: string, { path }: ParseParams): string | ParseError {
+  protected _parse(value: string, { path }: ParseParams): string | ParseError {
     return value as any
   }
 }

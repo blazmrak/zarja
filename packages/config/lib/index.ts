@@ -16,7 +16,7 @@ export type ConfigDefinition<
 
 export type ExtractConfig<C extends ConfigDefinition<any, any>> = {
   [key in keyof C]: C[key] extends BaseVar<any, any>
-    ? C[key]['output']
+    ? C[key]['_output']
     : C[key] extends ConfigDefinitionRec<any, any>
     ? ExtractConfig<C[key]>
     : never
@@ -24,7 +24,7 @@ export type ExtractConfig<C extends ConfigDefinition<any, any>> = {
 
 export type Config<C extends ConfigDefinition<any, any>> = ExtractConfig<C> & {
   env: C['env'] extends BaseVar<any, any>
-    ? C['env']['output']
+    ? C['env']['_output']
     : 'local' | 'test' | 'staging' | 'production'
 }
 
@@ -55,7 +55,7 @@ function parseEnvironment<T extends ConfigDefinitionRec<BaseVarOpts, Value | Val
     const newPath = path ? path + '.' + key : key
     const name = path ? (path + '_' + key).toUpperCase() : key.toUpperCase()
     if (value instanceof BaseVar) {
-      const res = value.parse(env, { path: newPath, name })
+      const res = value['parse'](env, { path: newPath, name })
       if (typeof res === 'object' && !Array.isArray(res)) {
         errors.push(res)
       } else {
@@ -91,7 +91,7 @@ function runTransformations(
     const newPath = path ? path + '.' + key : key
     const name = path ? (path + '_' + key).toUpperCase() : key.toUpperCase()
     if (value instanceof BaseVar) {
-      const res = value.runTransformations(
+      const res = value['_runTransformations'](
         config[key],
         new TransformationContext({ env, path: newPath, name }),
       )
@@ -133,7 +133,7 @@ function extractVariables(
       let required = !value['_optional'] && value['_default'] === undefined
       let def = required
         ? undefined
-        : value.runTransformations(
+        : value['_runTransformations'](
             value['_default'],
             new TransformationContext({ env, path: newPath, name: name }),
           )
@@ -168,7 +168,7 @@ export function getVariables<T extends ConfigDefinition<any, any>>(
     .name('NODE_ENV')
     .default('local')
   let env = template.env['_default']
-  env = template.env.runTransformations(
+  env = template.env['_runTransformations'](
     env,
     new TransformationContext({ env, path: 'env', name: template.env.getName('ENV') }),
   )

@@ -9,7 +9,7 @@ export class NumberVar extends BaseVar<NumberVarOpts, number> {
     super({ type: 'number' })
   }
 
-  _parse(value: string, params: ParseParams): number | ParseError {
+  protected _parse(value: string, params: ParseParams): number | ParseError {
     const num = parseInt(value, 10)
 
     if (isNaN(num)) {

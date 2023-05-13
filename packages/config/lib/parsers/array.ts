@@ -33,7 +33,7 @@ export class ArrayVar<
     }
   }
 
-  _parse(value: string, params: ParseParams) {
+  protected _parse(value: string, params: ParseParams) {
     return value
       .split(',')
       .map(v => v.trim())

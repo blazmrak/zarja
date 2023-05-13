@@ -22,9 +22,6 @@
       ]
     },
     "test": {
-      "dependsOn": [
-        "build"
-      ],
       "inputs": [
         "default",
         "^default",

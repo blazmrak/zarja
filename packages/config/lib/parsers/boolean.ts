@@ -9,7 +9,7 @@ export class BooleanVar extends BaseVar<BooleanVarOpts, boolean> {
     super({ type: 'boolean' })
   }
 
-  _parse(value: string): boolean | ParseError {
+  protected _parse(value: string): boolean | ParseError {
     return value === 'true'
   }
 }

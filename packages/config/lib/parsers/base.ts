@@ -15,11 +15,11 @@ export class TransformationContext {
 type Transformer<T, R> = (arg: T, ctx: TransformationContext) => R
 
 export abstract class BaseVar<In extends BaseVarOpts, Output> {
-  output: Output
-  protected _optional = false
-  protected _default?: Output | undefined = undefined
-  protected _name?: string | undefined = undefined
-  protected _transformers: Transformer<any, any>[] = []
+  _output: Output
+  private _optional = false
+  private _default?: Output | undefined = undefined
+  private _name?: string | undefined = undefined
+  private _transformers: Transformer<any, any>[] = []
 
   constructor(protected _opts: In) {}
 
@@ -45,30 +45,6 @@ export abstract class BaseVar<In extends BaseVarOpts, Output> {
   }
 
   protected abstract _parse(value: string, params: ParseParams): Output | ParseError
-
-  parse(environment: Record<string, unknown>, params: ParseParams): Output | ParseError {
-    const name = this._name ?? params.name
-    params.name = name
-    let value = environment[name]
-
-    if (this._default != null && value == null) {
-      value = String(this._default)
-    } else if (!this._optional && value == null) {
-      return {
-        error: `Value of '${params.path}' (${name}) should be a${
-          ['a', 'e'].includes(this._opts.type.charAt(0)) ? 'n' : ''
-        } ${this._opts.type}`,
-      }
-    } else if (this._optional && value == null) {
-      return undefined as any
-    }
-
-    if (typeof value !== 'string') {
-      throw new Error('Bad environment')
-    }
-
-    return this._parse(value, params)
-  }
 
   transform(envs: string[], transformer: Transformer<Output, Output>): BaseVar<In, Output>
   transform<R = Output>(transformer: Transformer<Output, R>): BaseVar<In, R>
@@ -97,7 +73,31 @@ export abstract class BaseVar<In extends BaseVarOpts, Output> {
     return this as any
   }
 
-  runTransformations(value: In['type'], ctx: TransformationContext): Output | ParseError {
+  private parse(environment: Record<string, unknown>, params: ParseParams): Output | ParseError {
+    const name = this._name ?? params.name
+    params.name = name
+    let value = environment[name]
+
+    if (this._default != null && value == null) {
+      value = String(this._default)
+    } else if (!this._optional && value == null) {
+      return {
+        error: `Value of '${params.path}' (${name}) should be a${
+          ['a', 'e'].includes(this._opts.type.charAt(0)) ? 'n' : ''
+        } ${this._opts.type}`,
+      }
+    } else if (this._optional && value == null) {
+      return undefined as any
+    }
+
+    if (typeof value !== 'string') {
+      throw new Error('Bad environment')
+    }
+
+    return this._parse(value, params)
+  }
+
+  private _runTransformations(value: In['type'], ctx: TransformationContext): Output | ParseError {
     return this._transformers.reduce((res: In['type'] | ParseError, transformer) => {
       if (typeof res === 'object' && 'errors' in res) {
         return res

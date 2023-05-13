@@ -16,8 +16,8 @@ export type EnumOutput<T> = T extends {
 export type Enum = { [key: string]: string } | readonly string[]
 
 export class EnumVar<T extends Enum> extends BaseVar<EnumVarOpts<T>, EnumOutput<T>> {
-  _parse(value: string, params: ParseParams) {
-    let valid: string[] = []
+  protected _parse(value: string, params: ParseParams) {
+    let valid: string[]
     if (Array.isArray(this._opts.enum)) {
       valid = this._opts.enum
     } else {
