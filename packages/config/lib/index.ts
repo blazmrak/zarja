@@ -129,7 +129,7 @@ function extractVariables(
     const newPath = path ? path + '.' + key : key
     const name = path ? (path + '_' + key).toUpperCase() : key.toUpperCase()
     if (value instanceof BaseVar) {
-      const actualName = value.getName(name)
+      const actualName = value['getName'](name)
       let required = !value['_optional'] && value['_default'] === undefined
       let def = required
         ? undefined
@@ -161,7 +161,7 @@ export function getVariables<T extends ConfigDefinition<any, any>>(
   environment?: string,
 ): Variable[] {
   if (environment) {
-    template.env = Var.enum(environment).name(template.env?.getName('ENV') ?? 'NODE_ENV')
+    template.env = Var.enum(environment).name(template.env?.['getName']('ENV') ?? 'NODE_ENV')
   }
 
   template.env ??= Var.enum(['local', 'test', 'staging', 'production'])
@@ -170,7 +170,7 @@ export function getVariables<T extends ConfigDefinition<any, any>>(
   let env = template.env['_default']
   env = template.env['_runTransformations'](
     env,
-    new TransformationContext({ env, path: 'env', name: template.env.getName('ENV') }),
+    new TransformationContext({ env, path: 'env', name: template.env['getName']('ENV') }),
   )
 
   return extractVariables(template, env)

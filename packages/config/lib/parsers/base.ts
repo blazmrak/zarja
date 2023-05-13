@@ -40,7 +40,7 @@ export abstract class BaseVar<In extends BaseVarOpts, Output> {
     return this
   }
 
-  getName(name: string): string {
+  private getName(name: string): string {
     return this._name ?? name
   }
 
