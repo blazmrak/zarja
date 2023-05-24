@@ -23,7 +23,7 @@ export type BaseVarOpts = {
 
 export class Var {
   static string(def?: string) {
-    if (def) {
+    if (def != null) {
       return new StringVar().default(def)
     }
 
@@ -31,7 +31,7 @@ export class Var {
   }
 
   static number(def?: number) {
-    if (def) {
+    if (def != null) {
       return new NumberVar().default(def)
     }
 
@@ -39,7 +39,7 @@ export class Var {
   }
 
   static boolean(def?: boolean) {
-    if (def) {
+    if (def != null) {
       return new BooleanVar().default(def)
     }
 
