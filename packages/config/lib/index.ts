@@ -210,7 +210,12 @@ function readFile(directory: string, file: string) {
 
 export function initializeEnvironment<T extends ConfigDefinition<any, any>>(
   template: T,
-  { env, file = '.env.local', directory = './', fromFile = true }: InitOpts = {},
+  {
+    env,
+    file = `.env.${process.env.NODE_ENV ?? 'local'}`,
+    directory = './',
+    fromFile = true,
+  }: InitOpts = {},
 ): Config<T> {
   if (!env && !fromFile) {
     env = process.env
