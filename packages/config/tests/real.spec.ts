@@ -34,11 +34,16 @@ describe('real tests', function () {
         .transform(['staging', 'production'], () => false),
       recreate: Var.boolean().default(false),
     },
+    email: {
+      sendgrid: {
+        apiKey: Var.string(),
+      },
+    },
     swagger: Var.boolean().default(false),
   }
 
   it('simple configuration', () => {
-    const env = { JWT_SECRET: 'secret', DB_URL: 'db.url' }
+    const env = { JWT_SECRET: 'secret', DB_URL: 'db.url', EMAIL_SENDGRID_APIKEY: 'apikey' }
 
     const configuration = initializeEnvironment(configSchema, { env })
 
@@ -63,6 +68,11 @@ describe('real tests', function () {
         type: 'postgres'
         logging: boolean
         recreate: boolean
+      }
+      email: {
+        sendgrid: {
+          apiKey: string
+        }
       }
       swagger: boolean
     }>()

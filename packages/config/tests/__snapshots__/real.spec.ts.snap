@@ -83,6 +83,13 @@ exports[`real tests extracts all environment variables 1`] = `
     "type": "boolean",
   },
   {
+    "default": undefined,
+    "name": "EMAIL_SENDGRID_APIKEY",
+    "path": "email.sendgrid.apiKey",
+    "required": true,
+    "type": "string",
+  },
+  {
     "default": false,
     "name": "SWAGGER",
     "path": "swagger",
@@ -115,6 +122,13 @@ exports[`real tests extracts all environment variables 2`] = `
     "required": true,
     "type": "string",
   },
+  {
+    "default": undefined,
+    "name": "EMAIL_SENDGRID_APIKEY",
+    "path": "email.sendgrid.apiKey",
+    "required": true,
+    "type": "string",
+  },
 ]
 `;
 
@@ -130,6 +144,7 @@ DB_URL=
 #DB_TYPE=postgres
 #DB_LOGGING=false
 #DB_RECREATE=false
+EMAIL_SENDGRID_APIKEY=
 #SWAGGER=false
 #NODE_ENV=local"
 `;
@@ -143,6 +158,9 @@ EnvironmentInitializationFailed {
     {
       "error": "Value of 'db.url' (DB_URL) should be a string",
     },
+    {
+      "error": "Value of 'email.sendgrid.apiKey' (EMAIL_SENDGRID_APIKEY) should be a string",
+    },
   ],
 }
 `;
@@ -154,6 +172,11 @@ exports[`real tests simple configuration 1`] = `
     "recreate": false,
     "type": "postgres",
     "url": "db.url",
+  },
+  "email": {
+    "sendgrid": {
+      "apiKey": "apikey",
+    },
   },
   "env": "local",
   "jwt": {

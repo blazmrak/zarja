@@ -53,7 +53,7 @@ function parseEnvironment<T extends ConfigDefinitionRec<BaseVarOpts, Value | Val
 
   const result = Object.entries(template).reduce((acc, [key, value]) => {
     const newPath = path ? path + '.' + key : key
-    const name = path ? (path + '_' + key).toUpperCase() : key.toUpperCase()
+    const name = newPath.replaceAll('.', '_').toUpperCase()
     if (value instanceof BaseVar) {
       const res = value['parse'](env, { path: newPath, name })
       if (typeof res === 'object' && !Array.isArray(res)) {
@@ -89,7 +89,7 @@ function runTransformations(
 
   const result = Object.entries(template).reduce((acc, [key, value]) => {
     const newPath = path ? path + '.' + key : key
-    const name = path ? (path + '_' + key).toUpperCase() : key.toUpperCase()
+    const name = newPath.replaceAll('.', '_').toUpperCase()
     if (value instanceof BaseVar) {
       const res = value['_runTransformations'](
         config[key],
@@ -127,7 +127,7 @@ function extractVariables(
 ): Variable[] {
   return Object.entries(template).reduce((acc, [key, value]) => {
     const newPath = path ? path + '.' + key : key
-    const name = path ? (path + '_' + key).toUpperCase() : key.toUpperCase()
+    const name = newPath.replaceAll('.', '_').toUpperCase()
     if (value instanceof BaseVar) {
       const actualName = value['getName'](name)
       let required = !value['_optional'] && value['_default'] === undefined
