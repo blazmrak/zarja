@@ -1,61 +1,106 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common'
-import { ClassSerializerInterceptor, ExcludeNullInterceptor, PaginationDto } from './serialization'
+import { ClassSerializerInterceptor, ListDto, PaginationDto } from './api/serialization'
 import { Reflector } from '@nestjs/core'
 import helmet, { HelmetOptions } from 'helmet'
-import { AuthGuard } from './auth'
+import { AuthGuard } from './api/auth'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { ExceptionLoggingFilter, LoggerInterceptor } from './interceptors/logging.interceptor'
+import { Logger } from 'nestjs-pino'
+import { ClassConstructor } from 'class-transformer'
+import { ExcludeNullInterceptor } from './interceptors/exclude-null.interceptor'
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface'
 
-export * from './pagination'
-export * from './validation'
-export * from './serialization'
+export * from './logger'
+export * from './api/pagination'
+export * from './api/validation'
+export * from './api/serialization'
 
-type PackerHttpOpts = {
-  helmet: HelmetOptions
-  serialization: {
+export enum LogContent {
+  META = 'meta',
+  PARAMS = 'params',
+  USER = 'user',
+  HEADERS = 'headers',
+  REQ_BODY = 'req-body',
+  RES_BODY = 'res-body',
+}
+
+export type PackerHttpOpts = {
+  helmet?: HelmetOptions
+  cors?: CorsOptions
+  serialization?: {
     serializeResponses: boolean
     excludeNullFromResponse: boolean
   }
   jwt?: {
-    enabled: boolean
     secret: string
   }
+  logger: {
+    content: LogContent[]
+  }
   swagger?: {
-    enabled: boolean
     version: string
     title: string
     document?: {
       jsonPath?: string
       yamlPath?: string
     }
-    gui: {
+    gui?: {
       path: string
     }
+    extraModels?: ClassConstructor<any>[]
   }
 }
 
 export class ZarjaHttp {
   static setup(app: INestApplication, opts: PackerHttpOpts) {
     app.use(helmet(opts.helmet))
+    app.enableCors(opts.cors)
 
-    if (opts.jwt?.enabled) app.useGlobalGuards(new AuthGuard(opts.jwt))
+    if (opts.jwt) app.useGlobalGuards(new AuthGuard(opts.jwt))
 
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        transform: true,
+        transformOptions: { enableImplicitConversion: true },
+      }),
+    )
 
-    if (opts.serialization.serializeResponses)
-      app.useGlobalInterceptors(new ClassSerializerInterceptor(new Reflector()))
+    // Register logger interceptor first, as it will run last this way
+    if (opts.logger.content.includes(LogContent.RES_BODY)) {
+      app.useGlobalInterceptors(new LoggerInterceptor())
+      app.useGlobalFilters(new ExceptionLoggingFilter())
+    }
 
-    if (opts.serialization.excludeNullFromResponse)
+    if (opts.serialization?.excludeNullFromResponse)
       app.useGlobalInterceptors(new ExcludeNullInterceptor())
 
-    if (opts.swagger?.enabled) {
+    if (opts.serialization?.serializeResponses)
+      app.useGlobalInterceptors(
+        new ClassSerializerInterceptor(new Reflector(), {
+          enableImplicitConversion: true,
+          excludeExtraneousValues: true,
+        }),
+      )
+
+    app.useLogger(app.get(Logger))
+    app.flushLogs()
+
+    if (opts.swagger) {
       const config = new DocumentBuilder()
         .setTitle(opts.swagger.title)
         .setVersion(opts.swagger.version)
         .addBearerAuth()
         .build()
 
-      const document = SwaggerModule.createDocument(app, config, { extraModels: [PaginationDto] })
-      SwaggerModule.setup(opts.swagger.gui.path, app, document, {
+      const extraModels = opts.swagger.extraModels ?? []
+      extraModels.push(PaginationDto, ListDto)
+
+      const document = SwaggerModule.createDocument(app, config, {
+        extraModels,
+      })
+
+      SwaggerModule.setup(opts.swagger.gui?.path ?? '/q/openapi', app, document, {
         jsonDocumentUrl: opts.swagger.document?.jsonPath,
         yamlDocumentUrl: opts.swagger.document?.yamlPath,
         swaggerOptions: <any>{
@@ -65,6 +110,7 @@ export class ZarjaHttp {
           showCommonExtensions: true,
           defaultModelExpandDepth: 100,
           defaultModelsExpandDepth: 100,
+          tagsSorter: 'alpha',
         },
       })
     }

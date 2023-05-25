@@ -1,7 +1,8 @@
 import { applyDecorators } from '@nestjs/common'
 import {
   IsEnum as CVIsEnum,
-  IsNumber,
+  IsNumber as CVIsNumber,
+  IsNumberOptions,
   IsOptional as CVIsOptional,
   IsString,
   Max as CVMax,
@@ -11,13 +12,18 @@ import {
   ValidationOptions,
 } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
-import { Transform } from 'class-transformer'
+
+export const IsNumber = (numOpts?: IsNumberOptions, validOpts?: ValidationOptions) =>
+  applyDecorators(
+    CVIsNumber(numOpts, validOpts),
+    ApiProperty({ isArray: validOpts?.each, type: 'number' }),
+  )
 
 export const Max = (maximum: number) =>
-  applyDecorators(IsNumber(), CVMax(maximum), ApiProperty({ maximum }))
+  applyDecorators(CVIsNumber(), CVMax(maximum), ApiProperty({ maximum }))
 
 export const Min = (minimum: number) =>
-  applyDecorators(IsNumber(), CVMin(minimum), ApiProperty({ minimum }))
+  applyDecorators(CVIsNumber(), CVMin(minimum), ApiProperty({ minimum }))
 
 export const MaxLength = (maxLength: number) =>
   applyDecorators(IsString(), CVMaxLength(maxLength), ApiProperty({ maxLength }))
@@ -29,17 +35,3 @@ export const IsEnum = (value: object, opts?: ValidationOptions) =>
   applyDecorators(CVIsEnum(value, opts), ApiProperty({ enum: value, isArray: opts?.each }))
 
 export const IsOptional = () => applyDecorators(CVIsOptional(), ApiProperty({ required: false }))
-
-export const Default = (defaultValue: unknown) => {
-  if (defaultValue instanceof Function) {
-    return applyDecorators(
-      Transform((value: unknown) => value ?? defaultValue()),
-      ApiProperty({ default: defaultValue() }),
-    )
-  }
-
-  return applyDecorators(
-    Transform((value: unknown) => value ?? defaultValue),
-    ApiProperty({ default: defaultValue }),
-  )
-}

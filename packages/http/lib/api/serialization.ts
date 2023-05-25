@@ -19,7 +19,17 @@ import { ClassTransformOptions } from '@nestjs/common/interfaces/external/class-
 import { IsNumber } from 'class-validator'
 import { Pagination } from './pagination'
 
-export const Public = () => applyDecorators(Expose(), ApiProperty())
+type PublicOpts = {
+  isArray?: boolean
+}
+export const Public = (opts?: PublicOpts) =>
+  applyDecorators(Expose(), ApiProperty({ isArray: opts?.isArray }))
+
+export const ListType = (type: ClassConstructor<any>) =>
+  applyDecorators(
+    Type(() => type),
+    ApiProperty({ isArray: true, type }),
+  )
 
 export const Serialize = (type?: ClassConstructor<any> | unknown) =>
   applyDecorators(SetMetadata(ClassSerializerInterceptor.METADATA_OPTIONS, { type }))
@@ -29,6 +39,27 @@ export const ApiResult = <T extends ClassConstructor<any>>(type: T) =>
     Serialize(type),
     ApiOkResponse({
       type,
+    }),
+  )
+
+export const ApiListResult = <T extends ClassConstructor<any>>(model: T) =>
+  applyDecorators(
+    Serialize(new ListDto(model)),
+    ApiOkResponse({
+      schema: {
+        title: `ListResponseOf${model.name}`,
+        allOf: [
+          { $ref: getSchemaPath(ListDto) },
+          {
+            properties: {
+              data: {
+                type: 'array',
+                items: { $ref: getSchemaPath(model) },
+              },
+            },
+          },
+        ],
+      },
     }),
   )
 
@@ -57,21 +88,38 @@ export class PaginationDto<T> implements Pagination<T> {
   @Exclude()
   private _type: T
 
+  @Public()
+  @Type((opts: any) => opts.newObject._type)
+  data: T[]
+
+  @Public()
+  @IsNumber()
+  page: number
+
+  @Public()
+  @IsNumber()
+  perPage: number
+
+  @Public()
+  @IsNumber()
+  count: number
+
+  @Public()
+  @IsNumber()
+  maxPage: number
+
+  constructor(type: T) {
+    this._type = type
+  }
+}
+
+export class ListDto<T> implements Pick<Pagination<T>, 'data'> {
+  @Exclude()
+  private _type: T
+
   @Type((opts: any) => opts.newObject._type)
   @Public()
   data: T[]
-
-  @IsNumber()
-  @Public()
-  page: number
-
-  @IsNumber()
-  @Public()
-  length: number
-
-  @IsNumber()
-  @Public()
-  maxPage: number
 
   constructor(type: T) {
     this._type = type
@@ -151,26 +199,5 @@ export class ClassSerializerInterceptor implements NestInterceptor {
       context.getHandler(),
       context.getClass(),
     ])
-  }
-}
-
-function stripNullValues(value: unknown): unknown {
-  if (Array.isArray(value)) {
-    return value.map(stripNullValues)
-  }
-  if (value !== null && typeof value === 'object' && !(value instanceof Date)) {
-    return Object.fromEntries(
-      Object.entries(value).map(([key, value]) => [key, stripNullValues(value)]),
-    )
-  }
-  if (value !== null) {
-    return value
-  }
-}
-
-@Injectable()
-export class ExcludeNullInterceptor implements NestInterceptor {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    return next.handle().pipe(map(value => stripNullValues(value)))
   }
 }

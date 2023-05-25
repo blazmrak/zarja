@@ -1,11 +1,38 @@
-# `http`
+# Usage
 
-> TODO: everything
+```ts
+// modules/app.module.ts
+import { createLoggerConfig, ZarjaHttp } from '@zarja/http'
+import { NestFactory, Module } from '@nestjs/common'
+import { LoggerModule } from 'nestjs-pino'
+import { config } from '../common/config' // Environment configuration
 
-## Usage
+async function createApp() {
+  const app = NestFactory.create(AppModule, { bufferLogs: true })
 
+  ZarjaHttp.setup(app, {
+    serialization: {
+      serializeResponses: true,
+      excludeNullFromResponse: true
+    },
+    logger: config.logger
+  })
+
+  return app
+}
+
+@Module({
+  import: [
+    LoggerModule.forRootAsync(createLoggerConfig(config.logger)),
+    // ...
+  ]
+})
+export class AppModule {}
 ```
-const http = require('@zarja/http');
 
-// TODO: DEMONSTRATE API
+```ts
+// main.ts
+import { createApp } from './modules/app.module'
+
+createApp().then(app => app.start())
 ```
