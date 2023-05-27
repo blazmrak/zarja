@@ -24,7 +24,7 @@ export enum LogContent {
   RES_BODY = 'res-body',
 }
 
-export type PackerHttpOpts = {
+export type ZarjaHttpOpts = {
   helmet?: HelmetOptions
   cors?: CorsOptions
   serialization?: {
@@ -52,7 +52,7 @@ export type PackerHttpOpts = {
 }
 
 export class ZarjaHttp {
-  static setup(app: INestApplication, opts: PackerHttpOpts) {
+  static setup(app: INestApplication, opts: ZarjaHttpOpts) {
     app.use(helmet(opts.helmet))
     app.enableCors(opts.cors)
 
