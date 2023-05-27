@@ -34,7 +34,7 @@ export type ZarjaHttpOpts = {
   jwt?: {
     secret: string
   }
-  logger: {
+  logger?: {
     content: LogContent[]
   }
   swagger?: {
@@ -67,7 +67,7 @@ export class ZarjaHttp {
     )
 
     // Register logger interceptor first, as it will run last this way
-    if (opts.logger.content.includes(LogContent.RES_BODY)) {
+    if (opts.logger?.content.includes(LogContent.RES_BODY)) {
       app.useGlobalInterceptors(new LoggerInterceptor())
       app.useGlobalFilters(new ExceptionLoggingFilter())
     }
