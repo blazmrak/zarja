@@ -108,19 +108,31 @@ function responseSerializer(logContent: LogContent[]) {
 }
 
 export type ZarjaLoggerConfig = {
-  env: string
-  level: LogLevel
-  content: LogContent[]
-  format: LogFormat
-  cfg?: any
+  transport: {
+    env: string
+    level: LogLevel
+    content: LogContent[]
+    format: LogFormat
+  }
+  cfg?: Omit<Params, 'pinoHttp'>
 }
 
 export function createLoggerConfig(
-  opts: ZarjaLoggerConfig = {
-    level: LogLevel.INFO,
-    content: [LogContent.META, LogContent.USER],
-    format: LogFormat.RAW,
-    env: 'production',
+  {
+    transport: {
+      level = LogLevel.INFO,
+      content = [LogContent.META, LogContent.USER],
+      format = LogFormat.RAW,
+      env = 'production',
+    },
+    cfg,
+  }: ZarjaLoggerConfig = {
+    transport: {
+      level: LogLevel.INFO,
+      content: [LogContent.META, LogContent.USER],
+      format: LogFormat.RAW,
+      env: 'production',
+    },
   },
 ): LoggerModuleAsyncParams {
   return {
@@ -148,7 +160,7 @@ export function createLoggerConfig(
             }
             return { 'level-label': label }
           },
-          transport: initTransport(opts.env, opts.level, opts.format, opts.content),
+          transport: initTransport(env, level, format, content),
           customLogLevel: (req, res) => {
             if (res.statusCode > 500) {
               return 'error'
@@ -164,13 +176,13 @@ export function createLoggerConfig(
             }
           },
           wrapSerializers: false,
-          level: opts?.level ?? LogLevel.INFO,
+          level: level,
           serializers: {
-            req: requestSerializer(opts.content),
-            res: responseSerializer(opts.content),
+            req: requestSerializer(content),
+            res: responseSerializer(content),
           },
         },
-        ...opts,
+        ...cfg,
       }
     },
   }
