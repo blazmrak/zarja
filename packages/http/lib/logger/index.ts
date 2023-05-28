@@ -114,6 +114,7 @@ export type ZarjaLoggerConfig = {
     content: LogContent[]
     format: LogFormat
   }
+  pinoHttp?: Pick<Params, 'pinoHttp'>
   cfg?: Omit<Params, 'pinoHttp'>
 }
 
@@ -125,6 +126,7 @@ export function createLoggerConfig(
       format = LogFormat.RAW,
       env = 'production',
     },
+    pinoHttp,
     cfg,
   }: ZarjaLoggerConfig = {
     transport: {
@@ -181,6 +183,7 @@ export function createLoggerConfig(
             req: requestSerializer(content),
             res: responseSerializer(content),
           },
+          ...pinoHttp,
         },
         ...cfg,
       }

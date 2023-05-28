@@ -1,14 +1,15 @@
-import { INestApplication, ValidationPipe } from '@nestjs/common'
+import { DynamicModule, INestApplication, ValidationPipe } from '@nestjs/common'
 import { ClassSerializerInterceptor, ListDto, PaginationDto } from './api/serialization'
 import { Reflector } from '@nestjs/core'
 import helmet, { HelmetOptions } from 'helmet'
 import { AuthGuard } from './api/auth'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { ExceptionLoggingFilter, LoggerInterceptor } from './interceptors/logging.interceptor'
-import { Logger } from 'nestjs-pino'
+import { Logger, LoggerModule } from 'nestjs-pino'
 import { ClassConstructor } from 'class-transformer'
 import { ExcludeNullInterceptor } from './interceptors/exclude-null.interceptor'
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface'
+import { createLoggerConfig, ZarjaLoggerConfig } from './logger'
 
 export * from './logger'
 export * from './api/pagination'
@@ -51,7 +52,18 @@ export type ZarjaHttpOpts = {
   }
 }
 
+export type ZarjaHttpModuleConfig = {
+  logger?: ZarjaLoggerConfig
+}
+
 export class ZarjaHttp {
+  static forRootAsync(config: ZarjaHttpModuleConfig): DynamicModule {
+    return {
+      module: ZarjaHttp,
+      imports: [LoggerModule.forRootAsync(createLoggerConfig(config.logger))],
+    }
+  }
+
   static setup(app: INestApplication, opts: ZarjaHttpOpts) {
     app.use(helmet(opts.helmet))
     app.enableCors(opts.cors)
