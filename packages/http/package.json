@@ -1,6 +1,6 @@
 {
   "name": "@zarja/http",
-  "version": "0.1.0-alpha.21",
+  "version": "0.1.0-alpha.22",
   "description": "Http utilities for NestJS",
   "author": "blazmrak",
   "license": "MIT",
